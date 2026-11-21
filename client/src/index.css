@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-obsidian: #070a0f;
+  --surface-obsidian: #0d131f;
+  --surface-elevated: #151d2c;
+  --gold-primary: #d4af37;
+  --gold-light: #f5de88;
+  --gold-glow: rgba(212, 175, 55, 0.2);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-gold: rgba(212, 175, 55, 0.25);
+}
+
+@layer base {
+  body {
+    background-color: var(--bg-obsidian);
+    font-family: 'Plus Jakarta Sans', 'Noto Sans Gujarati', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #090d14;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #334155;
+  }
+}
+
+@layer components {
+  /* Bespoke Glassmorphism Tokens */
+  .glass-panel {
+    background: rgba(13, 19, 31, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .glass-card {
+    background: linear-gradient(
+      135deg,
+      rgba(21, 29, 44, 0.75) 0%,
+      rgba(13, 19, 31, 0.85) 100%
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  .glass-card-hover {
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glass-card-hover:hover {
+    border-color: var(--border-gold);
+    box-shadow: 0 12px 40px -10px rgba(212, 175, 55, 0.15);
+  }
+
+  .glass-pill {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .gold-gradient-text {
+    background: linear-gradient(135deg, #fffdf5 0%, #d4af37 50%, #b69022 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .serif-editorial {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+  }
+}

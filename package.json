@@ -1,0 +1,27 @@
+{
+  "name": "salon-queue-management-system",
+  "version": "1.0.0",
+  "description": "Full-Stack MERN Salon Queue Management System with real-time Socket.IO, bilingual (English + Gujarati) UX, and bespoke luxury design tokens",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run server\" \"npm run client\"",
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "test:qa": "node server/src/tests/verifyE2EQAAudit.js",
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "keywords": [
+    "salon-queue",
+    "mern",
+    "socket.io",
+    "gujarati-i18n",
+    "framer-motion",
+    "tailwind"
+  ],
+  "author": "Antigravity Principal Architect",
+  "license": "ISC"
+}
