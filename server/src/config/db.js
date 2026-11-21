@@ -1,44 +1,62 @@
+
 import mongoose from 'mongoose';
 
-let memoryServer = null;
-
 /**
- * Connect to MongoDB with automatic in-memory fallback if standard local MongoDB is not running.
+ * Connect to MongoDB Atlas.
+ * Production must use a persistent external database.
  */
 export const connectDB = async () => {
-  const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/salon_queue';
+  const mongoUri = process.env.MONGO_URI;
+
+  if (!mongoUri) {
+    console.error('[Database] MONGO_URI environment variable is missing.');
+    return false;
+  }
 
   try {
-    // Attempt standard connection with a short timeout
+    console.log('[Database] Connecting to MongoDB Atlas...');
+
     const conn = await mongoose.connect(mongoUri, {
-      serverSelectionTimeoutMS: 2000,
+      serverSelectionTimeoutMS: 15000,
+      connectTimeoutMS: 10000,
     });
-    console.log(`[Database] Standard MongoDB connected: ${conn.connection.host}`);
+
+    console.log(
+      `[Database] Connected successfully: ${conn.connection.host}`
+    );
+
+    console.log(
+      `[Database] Active database: ${conn.connection.name}`
+    );
+
     return true;
   } catch (error) {
-    console.warn(`[Database] Standard MongoDB connection failed (${error.message}).`);
-    console.log(`[Database] Initializing embedded in-memory MongoDB fallback...`);
+    console.error('[Database] MongoDB connection failed.');
+    console.error('[Database] Error name:', error.name);
+    console.error('[Database] Error message:', error.message);
+    console.error('[Database] Error code:', error.code || 'N/A');
 
-    try {
-      const { MongoMemoryServer } = await import('mongodb-memory-server');
-      memoryServer = await MongoMemoryServer.create({
-        instance: {
-          dbName: 'salon_queue',
-        },
-      });
-      const uri = memoryServer.getUri();
-      const conn = await mongoose.connect(uri);
-      console.log(`[Database] Embedded In-Memory MongoDB connected successfully: ${conn.connection.host}`);
-      return true;
-    } catch (memErr) {
-      console.error(`[Database] Failed to start embedded in-memory MongoDB:`, memErr);
-      return false;
-    }
+    return false;
   }
 };
 
 /**
- * Check active MongoDB connection status
+ * Monitor database connection changes.
+ */
+mongoose.connection.on('connected', () => {
+  console.log('[Database] Connection established.');
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.warn('[Database] MongoDB disconnected.');
+});
+
+mongoose.connection.on('error', (error) => {
+  console.error('[Database] Runtime error:', error.message);
+});
+
+/**
+ * Return current database connection status.
  */
 export const getDBStatus = () => {
   const states = {
@@ -47,15 +65,16 @@ export const getDBStatus = () => {
     2: 'connecting',
     3: 'disconnecting',
   };
+
   return states[mongoose.connection.readyState] || 'unknown';
 };
 
+/**
+ * Close database connection.
+ */
 export const closeDB = async () => {
   if (mongoose.connection.readyState !== 0) {
     await mongoose.disconnect();
-  }
-  if (memoryServer) {
-    await memoryServer.stop();
   }
 };
 
