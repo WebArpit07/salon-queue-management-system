@@ -1,37 +1,42 @@
 # 10-Prompt Execution Log — Salon Queue Management System
 
-This document captures the complete 10-prompt lifecycle, engineering decisions, and verification records for the **Salon Queue Management System** (Studio Kashi Salon · સ્ટુડિયો કાશી સલૂન).
+**Live Frontend (Vercel):** https://salon-queue-management-system-249om38gv-web-arpit.vercel.app  
+**Live Backend API (Render):** https://salon-queue-api-tjbn.onrender.com  
+**Database:** MongoDB Atlas (M0 Free Cluster)  
+**Staff Demo PIN:** `1234` (Applies to `/reception`, `/barber/:name`, `/admin`)
 
 ---
 
-## Prompt 1: Environment, Docs-First Architecture, Scaffolding & Design Tokens
-- **Objective**: Establish modular repository structure, Antigravity specification docs (`docs/01-brief.md`, `docs/02-screens.md`, `docs/03-flows-rules.md`), dependencies, bespoke luxury design tokens, motion presets, and bilingual scaffolding (`en.js`, `gu.js`, `LanguageContext.jsx`).
+## 1. 10-Prompt Execution Roadmap & Milestones
+
+### Prompt 1: Environment, Docs-First Architecture, Scaffolding & Design Tokens
+- **Objective**: Establish the modular monorepo structure, core specification documents (`docs/01-brief.md`, `docs/02-screens.md`, `docs/03-flows-rules.md`), project dependencies, luxury design tokens, motion presets, and bilingual scaffolding (`en.js`, `gu.js`, `LanguageContext.jsx`).
 - **Key Deliverables**:
-  - Root `package.json` with `concurrently` workflows.
-  - Bespoke obsidian palette (`#0B0F17`, `#111827`, `#D4AF37`) and glassmorphic utility classes.
-  - Typography configuration: `Plus Jakarta Sans`, `Instrument Serif`, `Noto Sans Gujarati`.
-  - Spring motion presets in `client/src/lib/motion.js`.
+  - Root `package.json` with `concurrently` workflows for simultaneous backend and frontend dev execution.
+  - Bespoke obsidian palette (`#0B0F17`, `#111827`, `#1F2937`), warm gold accents (`#D4AF37`, `#F59E0B`), and glassmorphism utility classes.
+  - Typography configuration: `Plus Jakarta Sans` (Body & UI), `Instrument Serif` (Editorial headings), and `Noto Sans Gujarati` (Native Gujarati script).
+  - Apple OS-inspired spring motion presets in `client/src/lib/motion.js`.
   - Verified server and client health-check endpoints.
 
 ---
 
-## Prompt 2: MongoDB Schemas, Atomic Token Counter, Seed Data & Bootstrap API
+### Prompt 2: MongoDB Schemas, Atomic Token Counter, Seed Data & Bootstrap API
 - **Objective**: Implement Mongoose schemas, daily token counter with atomic sequence incrementing, timezone logic for Asia/Kolkata (IST), seed script for Indian salon context, and bootstrap API.
 - **Key Deliverables**:
-  - `Service.js`: Services with bilingual names, durations, prices in INR.
+  - `Service.js`: Service catalog with bilingual titles, descriptions, durations, and INR pricing.
   - `Barber.js`: Barbers with slug, status (`available`, `busy`, `on_break`), `onDuty`, and `currentTicketId`.
-  - `QueueTicket.js`: Multi-service tickets with compound indexes `{ dateKey, status, joinedAt }` and phone guards.
-  - `DailyCounter.js`: Atomic `getNextToken(dateKey)` generating `S-1`, `S-2`, etc.
+  - `QueueTicket.js`: Multi-service tickets with compound indexes `{ dateKey, status, joinedAt }` and active phone guards.
+  - `DailyCounter.js`: Atomic `getNextToken(dateKey)` generating `S-1`, `S-2`, etc., resetting cleanly at midnight IST.
   - Embedded in-memory MongoDB fallback in `server/src/config/db.js` for zero-setup local execution.
-  - `GET /api/bootstrap` and `POST /api/auth/verify-pin` (`1234`).
+  - `GET /api/bootstrap` snapshot endpoint and `POST /api/auth/verify-pin` (`1234`).
 
 ---
 
-## Prompt 3: Core Queue Engine, Business Rules, REST API & Real-Time Socket.IO Sync
+### Prompt 3: Core Queue Engine, Business Rules, REST API & Real-Time Socket.IO Sync
 - **Objective**: Implement single-source-of-truth queue engine, REST endpoints for Customer, Reception, Barber, and TV display, staff PIN middleware, and Socket.IO state synchronization.
 - **Key Deliverables**:
-  - `requireStaffPin.js` middleware validating `x-staff-pin`.
-  - Forward-only state machine: `waiting ➔ called ➔ in_chair ➔ done`, `waiting ➔ cancelled`, `called ➔ no_show`.
+  - `requireStaffPin.js` middleware validating `x-staff-pin` header and body fallback.
+  - Forward-only state machine: `waiting ➔ called ➔ in_chair ➔ done`, `waiting ➔ cancelled`, `called ➔ no_show`. Backwards state mutations strictly rejected with HTTP 400.
   - Dynamic wait time algorithm balancing active chair sessions and queue positions.
   - Barber preference assignment rule prioritizing specific requests while allowing flexible "Any" routing.
   - Real-time events: `'queue:updated'` and `'ticket:called'`.
@@ -39,17 +44,17 @@ This document captures the complete 10-prompt lifecycle, engineering decisions, 
 
 ---
 
-## Prompt 4: App Shell, EN/GU Language Switcher, Global State, Home & Join Queue Screens
+### Prompt 4: App Shell, EN/GU Language Switcher, Global State, Home & Join Queue Screens
 - **Objective**: Construct main client routing, elevated glassmorphic app shell, global Socket.IO/state context, and implement Screen 1 (Home `/`) and Screen 2 (Join Queue `/join`).
 - **Key Deliverables**:
-  - `QueueContext.jsx` binding Socket.IO and REST snapshot state.
-  - `HomePage.jsx`: Hero glass card, live wait estimate, barber chip status carousel, and active ticket banner.
+  - `QueueContext.jsx` binding Socket.IO and REST snapshot state with optimistic updates.
+  - `HomePage.jsx`: Hero glass card, live wait estimate pill, barber chip status carousel, and active ticket quick-access banner.
   - `JoinQueuePage.jsx`: 10-digit Indian mobile mask, max-3 service selector with live price/time tally, barber selector, and duplicate spot recovery.
-  - Language toggle (`EN` / `ગુજરાતી`) with persistence in `localStorage`.
+  - Language toggle (`EN` / `ગુજરાતી`) with instant persistence in `localStorage`.
 
 ---
 
-## Prompt 5: Customer Live Status Tracker (/status/:id) & Active Ticket Persistence
+### Prompt 5: Customer Live Status Tracker (/status/:id) & Active Ticket Persistence
 - **Objective**: Build Screen 3 (My Status `/status/:id`) modeled on the top-right card of the showcase artwork with live countdown, Web Audio chime, and vibration alerts.
 - **Key Deliverables**:
   - Animated SVG countdown ring with pulse states for `waiting`, `called`, `in_chair`, and terminal states.
@@ -59,7 +64,7 @@ This document captures the complete 10-prompt lifecycle, engineering decisions, 
 
 ---
 
-## Prompt 6: Staff PIN Gate, Receptionist Dashboard & Barber Station View
+### Prompt 6: Staff PIN Gate, Receptionist Dashboard & Barber Station View
 - **Objective**: Implement reusable Staff PIN unlock gate, Screen 4 (Receptionist `/reception`), and Screen 5 (Barber Station `/barber/:name`).
 - **Key Deliverables**:
   - `StaffPinGate.jsx` with 4-digit PIN pad and session persistence.
@@ -68,7 +73,7 @@ This document captures the complete 10-prompt lifecycle, engineering decisions, 
 
 ---
 
-## Prompt 7: Ambient Waiting Area TV Display (/display)
+### Prompt 7: Ambient Waiting Area TV Display (/display)
 - **Objective**: Build Screen 6 (Waiting Area TV `/display`) optimized for 1080p/4K TVs visible from 5 meters away.
 - **Key Deliverables**:
   - Full-screen distraction-free layout bypassing standard headers/footers.
@@ -78,7 +83,7 @@ This document captures the complete 10-prompt lifecycle, engineering decisions, 
 
 ---
 
-## Prompt 8: Owner Settings & Admin Dashboard (/admin) + Mobile & Bilingual Polish
+### Prompt 8: Owner Settings & Admin Dashboard (/admin) + Mobile & Bilingual Polish
 - **Objective**: Build Screen 7 (Owner Admin `/admin`), service catalog CRUD, master queue controls, and mobile tap-target accessibility polish.
 - **Key Deliverables**:
   - Today's stats trio: Customers Served, Average Wait Time, No-shows.
@@ -89,7 +94,7 @@ This document captures the complete 10-prompt lifecycle, engineering decisions, 
 
 ---
 
-## Prompt 9: End-to-End QA Audit, Production Hardening & Cloud Deployment Config
+### Prompt 9: End-to-End QA Audit, Production Hardening & Cloud Deployment Config
 - **Objective**: Audit 11 core system rules against `docs/03-flows-rules.md`, sanitize all URLs, configure multi-origin CORS, and prepare cloud deployment files.
 - **Key Deliverables**:
   - Comprehensive automated test suite `server/src/tests/verifyE2EQAAudit.js` (`npm run test:qa`) passing all 11 criteria.
@@ -100,5 +105,79 @@ This document captures the complete 10-prompt lifecycle, engineering decisions, 
 
 ---
 
-## Prompt 10: Production README.md, Prompts.md & Final Submission Audit
-- **Objective**: Finalize submission documentation with top live links, staff demo credentials, architecture diagrams, API specs, and deployment runbooks.
+### Prompt 10: Production README.md, Prompts.md & Final Submission Audit
+- **Objective**: Finalize submission documentation with verified top live links, staff demo credentials, architecture diagrams, API specs, and cloud deployment fixes runbook.
+- **Key Deliverables**:
+  - Root `README.md` with required 4 top lines, live demo links, 7 routes table, queue rules, and setup instructions.
+  - Complete `prompts.md` documenting all 10 prompts, UI reference notes, and detailed deployment fixes.
+  - Zero-error test suite verification (`npm run test:qa` and `npm --prefix server run test:engine`).
+
+---
+
+## 🎨 UI Reference Notes & Design Tokens
+
+### 1. Bespoke Color Palette
+- **Obsidian Dark Surface**: `#0B0F17` (Deep foundation), `#111827` (Card surface), `#1F2937` (Subtle borders and elevated panels).
+- **Warm Gold & Amber**: `#D4AF37` (Primary brand accent, ticket badges, highlight rings), `#F59E0B` (In-chair and active status pills).
+- **Emerald Accent**: `#10B981` (Available barbers, healthy system pulse, completion confirmations).
+- **Crimson / Rose**: `#EF4444` (No-shows, cancelled tickets, destructive confirmation actions).
+- **Muted Slate**: `#94A3B8` (Secondary labels, time stamps, subtitles).
+
+### 2. Typography System
+- **Body & Controls**: `Plus Jakarta Sans`, sans-serif (Clean, modern geometry with high legibility on small mobile displays).
+- **Editorial Brand Headlines**: `Instrument Serif`, serif (Elevated luxury flourishes on hero headings).
+- **Gujarati Script**: `Noto Sans Gujarati`, sans-serif (Pixel-perfect unicode rendering of Gujarati conjuncts and diacritics).
+
+### 3. Apple OS-Inspired Spring Motion Presets
+Configured in `client/src/lib/motion.js`:
+- `springSmooth`: `{ type: "spring", stiffness: 350, damping: 28 }`
+- `springSnappy`: `{ type: "spring", stiffness: 450, damping: 25 }`
+- `springGentle`: `{ type: "spring", stiffness: 200, damping: 24 }`
+- No linear transitions — all modals, lists, status rings, and toast notifications enter and exit with natural physical momentum.
+
+### 4. Audio & Haptic Feedback Engine
+- **Synthesizer**: Web Audio API `AudioContext` without external sound file dependencies (prevents broken audio links).
+- **Chime Chord**: 3 harmonic tones played in micro-arpeggio ($E_5 = 659.25\text{Hz}$, $G^\sharp_5 = 830.61\text{Hz}$, $B_5 = 987.77\text{Hz}$) with exponential gain decay.
+- **Haptic Vibration**: Dual-burst pattern `[250, 120, 250]` via `navigator.vibrate` on supported Android and mobile browsers.
+
+---
+
+## 🛠️ Deployment Fixes & Cloud Architecture Runbook
+
+During the production rollout to Render, MongoDB Atlas, and Vercel, three critical cloud configuration challenges were solved:
+
+### 1. Render Root Directory & Monorepo Build Setup
+- **The Issue**:
+  Render defaulted to the repository root directory. Since the root `package.json` was configured as a workspace runner using `concurrently`, running `npm start` directly on Render caused process lifecycle issues and failed to start the Express server on `0.0.0.0:$PORT`.
+- **The Fix**:
+  1. Configured `rootDir: server` in `render.yaml` and set the Render Web Service Root Directory to `server`.
+  2. Set the Build Command to `npm install` and Start Command to `npm start` (which executes `node src/index.js`).
+  3. Bound the HTTP listener explicitly to `0.0.0.0` with `httpServer.listen(PORT, '0.0.0.0', ...)`.
+
+### 2. MongoDB Atlas URI & IP Access Configuration
+- **The Issue**:
+  Connecting to MongoDB Atlas from cloud instances (like Render) often fails with `MongooseServerSelectionError` because cloud providers allocate dynamic egress IP addresses that change between deployments. If Atlas Network Access is set only to a developer's home IP, cloud connection attempts are rejected.
+- **The Fix**:
+  1. **Atlas Network Access**: Configured MongoDB Atlas Network Access IP Whitelist to include `0.0.0.0/0` (Allow Access from Anywhere).
+  2. **Connection Parameters & Timeouts**: In `server/src/config/db.js`, added explicit timeouts (`serverSelectionTimeoutMS: 15000`, `connectTimeoutMS: 10000`) to gracefully handle DNS SRV lookups on Render cold starts.
+  3. **Event Listeners**: Added continuous connection monitoring (`connected`, `disconnected`, `error`) and exposed database status in `/api/health` so Render health checks accurately reflect database readiness.
+
+### 3. Vercel VITE_API_URL Config & Client-Side SPA Rewrites
+- **The Issue**:
+  1. Vite compiles client environment variables during build time. Without `VITE_API_URL` set in Vercel's build environment, Axios calls defaulted to `http://localhost:5000`.
+  2. Direct navigation or browser refreshing on nested routes (`/join`, `/reception`, `/status/:id`, `/display`, `/admin`) returned Vercel 404s because the server looked for static files corresponding to those paths.
+- **The Fix**:
+  1. **Vercel Environment Variable**: Configured `VITE_API_URL=https://salon-queue-api-tjbn.onrender.com` in Vercel Project Settings > Environment Variables.
+  2. **SPA Rewrites**: Added `client/vercel.json`:
+     ```json
+     {
+       "rewrites": [
+         { "source": "/(.*)", "destination": "/" }
+       ]
+     }
+     ```
+  3. **CORS Origin Validation**: In `server/src/index.js`, implemented dynamic regex matching in CORS configuration:
+     ```javascript
+     const isVercelPreview = normalized.endsWith('.vercel.app');
+     ```
+     This automatically permits all current and future Vercel deployments and preview URLs to access the Render API without CORS rejections.
