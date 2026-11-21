@@ -12,7 +12,7 @@ const router = Router();
 router.get('/bootstrap', async (req, res) => {
   try {
     const salonConfig = (await SalonConfig.findOne({ key: 'default' })) || (await SalonConfig.create({}));
-    const barbers = await Barber.find({ onDuty: true }).sort({ name: 1 });
+    const barbers = await Barber.find().sort({ name: 1 });
     const services = await Service.find({ isActive: true }).sort({ sortOrder: 1, nameEn: 1 });
 
     const onlineStatus = evaluateOnlineJoiningStatus(salonConfig);

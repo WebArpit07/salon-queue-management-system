@@ -26,7 +26,7 @@ import { fadeInUp, springSnappy } from '../lib/motion';
 
 export const ReceptionDashboardContent = () => {
   const { t, isGujarati } = useLanguage();
-  const { barbers, waiting, called, inChair, queueState, refreshQueueState } = useQueue();
+  const { barbers = [], waiting = [], called = [], inChair = [], queueState, refreshQueueState } = useQueue();
 
   const [selectedTicketId, setSelectedTicketId] = useState(null);
   const [isWalkInModalOpen, setIsWalkInModalOpen] = useState(false);
@@ -227,8 +227,9 @@ export const ReceptionDashboardContent = () => {
                 called.find((t) => t.assignedBarber === barber.slug);
 
               const isBusy = barber.status === 'busy';
-              const isOnBreak = barber.status === 'on_break';
-              const isAvailable = barber.status === 'available' && !activeTicket;
+              const isOffDuty = !barber.onDuty;
+              const isOnBreak = barber.status === 'on_break' || isOffDuty;
+              const isAvailable = barber.onDuty && barber.status === 'available' && !activeTicket;
 
               // Has eligible waiting customers in line?
               const eligibleCount = waiting.filter(
@@ -238,7 +239,9 @@ export const ReceptionDashboardContent = () => {
               const canCallNext = isAvailable && eligibleCount > 0 && !actionInProgress[barber.slug];
 
               let statusText = t('receptionDashboard.availableStatus');
-              if (activeTicket) {
+              if (isOffDuty) {
+                statusText = isGujarati ? 'ઓફ ડ્યુટી' : 'Off Duty';
+              } else if (activeTicket) {
                 statusText =
                   activeTicket.status === 'called'
                     ? t('receptionDashboard.calledStatus').replace('{token}', activeTicket.token)
@@ -250,7 +253,9 @@ export const ReceptionDashboardContent = () => {
               return (
                 <div
                   key={barber.slug}
-                  className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex flex-col justify-between space-y-3"
+                  className={`p-4 rounded-2xl bg-white border shadow-sm flex flex-col justify-between space-y-3 ${
+                    isOffDuty ? 'border-slate-200/60 opacity-75' : 'border-slate-200/90'
+                  }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3 min-w-0">
@@ -267,6 +272,8 @@ export const ReceptionDashboardContent = () => {
                             className={`w-2 h-2 rounded-full ${
                               isBusy
                                 ? 'bg-amber-500'
+                                : isOffDuty
+                                ? 'bg-slate-400'
                                 : isOnBreak
                                 ? 'bg-rose-500'
                                 : 'bg-emerald-500'

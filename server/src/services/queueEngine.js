@@ -345,7 +345,7 @@ export const getLiveQueueSnapshot = async (targetDateKey = null) => {
     (await SalonConfig.findOne({ key: 'default' })) ||
     (await SalonConfig.create({}));
 
-  const barbers = await Barber.find({ onDuty: true })
+  const barbers = await Barber.find()
     .populate('currentTicketId')
     .sort({ name: 1 });
 
@@ -357,7 +357,7 @@ export const getLiveQueueSnapshot = async (targetDateKey = null) => {
   const doneTickets = tickets.filter((t) => t.status === 'done');
   const noShowTickets = tickets.filter((t) => t.status === 'no_show');
 
-  const workingBarbers = barbers.filter((b) => b.status !== 'on_break').length;
+  const workingBarbers = barbers.filter((b) => b.onDuty && b.status !== 'on_break').length;
 
   // Enrich waiting tickets with accurate position & wait-time
   const enrichedWaiting = waitingTickets.map((t, idx) => {

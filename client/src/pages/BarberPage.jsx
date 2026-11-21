@@ -25,7 +25,7 @@ export const BarberViewContent = () => {
   const { name: paramName } = useParams();
   const navigate = useNavigate();
   const { t, isGujarati } = useLanguage();
-  const { barbers, called, inChair, waiting, refreshQueueState } = useQueue();
+  const { barbers = [], called = [], inChair = [], waiting = [], refreshQueueState } = useQueue();
 
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [elapsedTimer, setElapsedTimer] = useState('00:00:00');

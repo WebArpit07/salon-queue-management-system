@@ -106,6 +106,8 @@ export const QueueProvider = ({ children }) => {
         todayStats: queueState.todayStats || initialQueueState.todayStats,
         onlineStatus: queueState.onlineStatus || initialQueueState.onlineStatus,
         waiting: queueState.waiting || [],
+        called: queueState.called || [],
+        inChair: queueState.inChair || [],
         upNextTop5: queueState.upNextTop5 || [],
         salonConfig: queueState.salonConfig || initialQueueState.salonConfig,
         isConnected,

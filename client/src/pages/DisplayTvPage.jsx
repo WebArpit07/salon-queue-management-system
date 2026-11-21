@@ -22,7 +22,7 @@ import { fadeInUp, springSnappy, springSmooth } from '../lib/motion';
 
 export const DisplayTvPage = () => {
   const { t, isGujarati } = useLanguage();
-  const { barbers, called, inChair, upNextTop5, queueState } = useQueue();
+  const { barbers = [], called = [], inChair = [], upNextTop5 = [], queueState } = useQueue();
 
   const [currentDateTime, setCurrentDateTime] = useState('');
   const [isSoundEnabled, setIsSoundEnabled] = useState(false);
@@ -314,12 +314,18 @@ export const DisplayTvPage = () => {
                       className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-full border ${
                         active
                           ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                          : !barber.onDuty
+                          ? 'bg-slate-800 text-slate-400 border-slate-700'
                           : barber.status === 'on_break'
                           ? 'bg-rose-500/15 text-rose-300 border-rose-500/30'
-                          : 'bg-slate-800 text-slate-400 border-slate-700'
+                          : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
                       }`}
                     >
-                      {active ? active.token : barber.status}
+                      {active
+                        ? active.token
+                        : !barber.onDuty
+                        ? (isGujarati ? 'ઓફ ડ્યુટી' : 'Off duty')
+                        : barber.status}
                     </span>
                   </div>
                   <p className="text-[10px] text-slate-400 truncate mt-1">

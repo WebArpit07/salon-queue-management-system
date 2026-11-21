@@ -47,7 +47,7 @@ async function runE2EQAAudit() {
   await QueueTicket.deleteMany({ dateKey });
   await DailyCounter.deleteMany({ _id: `ticket_${dateKey}` });
   await Barber.updateMany({}, { $set: { status: 'available', currentTicketId: null, onDuty: true } });
-  await SalonConfig.findOneAndUpdate({ key: 'default' }, { $set: { isQueueOpen: true, openTime: '09:00', closeTime: '21:00' } });
+  await SalonConfig.findOneAndUpdate({ key: 'default' }, { $set: { isQueueOpen: true, openTime: '00:00', closeTime: '23:59' } });
 
   // Connect Socket.IO client
   const socketClient = Client(BASE_URL);

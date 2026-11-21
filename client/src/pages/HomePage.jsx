@@ -46,6 +46,13 @@ export const HomePage = () => {
   const isQueueOpen = onlineStatus?.isOpen ?? true;
 
   const getStatusBadge = (barber) => {
+    if (!barber.onDuty) {
+      return {
+        label: `${barber.name} · ${isGujarati ? 'ઓફ ડ્યુટી' : 'Off Duty'}`,
+        color: 'bg-slate-800 text-slate-400 border-slate-700',
+        dot: 'bg-slate-500',
+      };
+    }
     if (barber.status === 'busy') {
       return {
         label: `${barber.name} · ${isGujarati ? 'વ્યસ્ત' : 'Busy'}`,

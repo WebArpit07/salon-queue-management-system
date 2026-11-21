@@ -42,6 +42,13 @@ const runEngineVerification = async () => {
   await DailyCounter.deleteMany({ _id: `ticket_${dateKey}` });
   await Barber.updateMany({}, { $set: { status: 'available', currentTicketId: null, onDuty: true } });
 
+  // Ensure queue is open during test execution
+  await SalonConfig.findOneAndUpdate(
+    { key: 'default' },
+    { $set: { isQueueOpen: true, openTime: '00:00', closeTime: '23:59' } },
+    { upsert: true }
+  );
+
   const services = await Service.find({ isActive: true }).sort({ sortOrder: 1 });
   if (services.length < 2) {
     throw new Error('Expected at least 2 services in seeded database');

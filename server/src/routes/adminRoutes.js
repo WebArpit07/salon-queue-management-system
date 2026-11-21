@@ -103,6 +103,19 @@ router.delete('/services/:id', async (req, res, next) => {
 });
 
 /**
+ * GET /api/admin/barbers
+ * Get all barbers (on duty and off duty)
+ */
+router.get('/barbers', async (req, res, next) => {
+  try {
+    const barbers = await Barber.find().populate('currentTicketId').sort({ name: 1 });
+    res.status(200).json({ barbers });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * PATCH /api/admin/barbers/:slug/duty
  * Toggle barber onDuty state (reject if actively servicing customer)
  */

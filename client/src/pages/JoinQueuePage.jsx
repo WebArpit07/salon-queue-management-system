@@ -378,7 +378,7 @@ export const JoinQueuePage = () => {
             </motion.div>
 
             {/* Individual Barbers */}
-            {barbers.map((b) => {
+            {barbers.filter((b) => b.onDuty).map((b) => {
               const isSelected = preferredBarber === b.slug;
               return (
                 <motion.div
