@@ -1,5 +1,5 @@
 # Salon Queue Management System
-**Live demo:** [https://salon-queue-management-system-249om38gv-web-arpit.vercel.app](https://salon-queue-management-system-249om38gv-web-arpit.vercel.app)
+**Live demo:** https://salon-queue-management-system.vercel.app/
 **Hosted on:** Vercel (frontend) + Render (backend) + MongoDB Atlas
 **Staff Demo PIN (Reception / Barber / Admin):** `1234`
 
