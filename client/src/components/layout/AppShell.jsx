@@ -76,7 +76,9 @@ export const AppShell = ({ children }) => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
             {navLinks.map((link) => {
-              const isActive = location.pathname === link.to;
+              const isActive =
+                location.pathname === link.to ||
+                (link.to.startsWith('/barber') && location.pathname.startsWith('/barber'));
               const Icon = link.icon;
               return (
                 <Link
@@ -143,7 +145,9 @@ export const AppShell = ({ children }) => {
               className="md:hidden px-4 pt-2 pb-4 border-t border-slate-800/80 bg-obsidian-900/98 backdrop-blur-xl space-y-1 overflow-hidden"
             >
               {navLinks.map((link) => {
-                const isActive = location.pathname === link.to;
+                const isActive =
+                  location.pathname === link.to ||
+                  (link.to.startsWith('/barber') && location.pathname.startsWith('/barber'));
                 const Icon = link.icon;
                 return (
                   <Link

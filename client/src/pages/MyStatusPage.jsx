@@ -22,6 +22,7 @@ import { useQueue } from '../context/QueueContext';
 import api from '../lib/api';
 import socket from '../lib/socket';
 import { playTurnChime } from '../lib/soundAlert';
+import TactileCard from '../components/ui/TactileCard';
 import { fadeInUp, staggerContainer, springSnappy, springSmooth } from '../lib/motion';
 
 export const MyStatusPage = () => {
@@ -41,7 +42,11 @@ export const MyStatusPage = () => {
 
   // 1. Fetch ticket status from API
   const fetchTicket = async () => {
-    if (!id) return;
+    if (!id || id === 'undefined' || id === 'null') {
+      setIsLoading(false);
+      setError('not_found');
+      return;
+    }
     try {
       const res = await api.get(`/api/queue/ticket/${id}`);
       setTicket(res.data);
@@ -259,7 +264,9 @@ export const MyStatusPage = () => {
               {t('tracker.yourPosition')}
             </span>
             <span className="text-sm sm:text-base font-bold text-gold-300 block">
-              {isWaiting ? getOrdinalPosition(currentPosition) : t(`status.${ticket.status}`)}
+              {isWaiting
+                ? getOrdinalPosition(currentPosition)
+                : t(`status.${ticket.status}`, ticket.status ? ticket.status.toUpperCase() : '')}
             </span>
           </div>
         </div>

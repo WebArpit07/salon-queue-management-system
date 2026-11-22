@@ -121,13 +121,20 @@ export const JoinQueuePage = () => {
         preferredBarber,
       });
 
-      const { ticket, isExisting } = response.data;
+      const data = response.data || {};
+      const ticket = data.ticket || (data._id || data.id ? data : null);
+      const ticketId = ticket?._id || ticket?.id || data._id || data.id || data.ticketId;
+      const isExisting = Boolean(data.isExisting);
+
+      if (!ticketId) {
+        throw new Error('Invalid ticket response received from server');
+      }
 
       // Persist active ticket in localStorage
       try {
         localStorage.setItem(
           'salon_active_ticket',
-          JSON.stringify({ ticketId: ticket._id, token: ticket.token })
+          JSON.stringify({ ticketId, token: ticket?.token || data.token || '---' })
         );
       } catch (e) {
         console.warn('Could not save active ticket to localStorage:', e);
@@ -136,10 +143,10 @@ export const JoinQueuePage = () => {
       if (isExisting) {
         setServerNotice(t('join.errors.duplicateTicket'));
         setTimeout(() => {
-          navigate(`/status/${ticket._id}`);
+          navigate(`/status/${ticketId}`);
         }, 1200);
       } else {
-        navigate(`/status/${ticket._id}`);
+        navigate(`/status/${ticketId}`);
       }
     } catch (err) {
       const msg = err.response?.data?.message || t('join.errors.joinFailed');

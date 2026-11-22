@@ -61,7 +61,11 @@ export const DisplayTvPage = () => {
         setHighlightedCall(event);
 
         if (isSoundEnabled) {
-          playTurnChime();
+          try {
+            playTurnChime();
+          } catch (e) {
+            console.warn('[DisplayTv] Chime error handled safely:', e);
+          }
         }
 
         // Auto-clear callout highlight after 6 seconds
@@ -84,7 +88,11 @@ export const DisplayTvPage = () => {
     const nextState = !isSoundEnabled;
     setIsSoundEnabled(nextState);
     if (nextState) {
-      playTurnChime(); // Primes the Web Audio API on explicit gesture
+      try {
+        playTurnChime(); // Primes the Web Audio API on explicit gesture
+      } catch (e) {
+        console.warn('[DisplayTv] Audio unlock handled safely:', e);
+      }
     }
   };
 
@@ -104,10 +112,10 @@ export const DisplayTvPage = () => {
 
   // Primary featured active cut (most recently called or active)
   const primaryFeaturedTicket =
-    called[0] || inChair[0] || null;
+    called?.[0] || inChair?.[0] || null;
 
   return (
-    <div className="min-h-screen w-full bg-[#0A0D0C] text-slate-100 flex flex-col justify-between p-6 sm:p-10 lg:p-12 relative overflow-hidden select-none">
+    <div className="min-h-screen w-full bg-[#0A0D0C] text-slate-100 flex flex-col justify-between p-4 sm:p-8 lg:p-10 relative overflow-x-hidden overflow-y-auto select-none">
       {/* Ambient Sage/Champagne Wave Glow along bottom edge */}
       <div className="absolute -bottom-24 inset-x-0 h-72 bg-gradient-to-t from-emerald-950/20 via-gold-950/15 to-transparent blur-[130px] pointer-events-none -z-10" />
 
@@ -271,7 +279,7 @@ export const DisplayTvPage = () => {
                   </span>
                 </p>
                 <p className="text-sm sm:text-base text-slate-300 font-light">
-                  {primaryFeaturedTicket.customerName}
+                  {primaryFeaturedTicket.customerName || (isGujarati ? 'ગ્રાહક' : 'Guest')}
                 </p>
               </div>
             </motion.div>
@@ -329,7 +337,7 @@ export const DisplayTvPage = () => {
                     </span>
                   </div>
                   <p className="text-[10px] text-slate-400 truncate mt-1">
-                    {active ? active.customerName : isGujarati ? barber.specialtyGu : barber.specialtyEn}
+                    {active ? (active.customerName || 'Guest') : isGujarati ? barber.specialtyGu || barber.specialtyEn : barber.specialtyEn || 'Hair Specialist'}
                   </p>
                 </div>
               );
@@ -384,12 +392,12 @@ export const DisplayTvPage = () => {
                     {/* Customer & Preference Tag */}
                     <div className="min-w-0 truncate">
                       <p className="font-semibold text-white truncate text-sm">
-                        {item.customerName}
+                        {item.customerName || (isGujarati ? 'ગ્રાહક' : 'Guest')}
                       </p>
                       <p className="text-[11px] text-slate-400 truncate">
-                        {item.preferredBarber === 'any'
+                        {item.preferredBarber === 'any' || !item.preferredBarber
                           ? isGujarati ? 'કોઈપણ વાળંદ' : 'Any Stylist'
-                          : `${item.preferredBarber.toUpperCase()}`}
+                          : `${String(item.preferredBarber).toUpperCase()}`}
                       </p>
                     </div>
                   </div>
