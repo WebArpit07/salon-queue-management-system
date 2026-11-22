@@ -18,6 +18,7 @@ import { useQueue } from '../context/QueueContext';
 import socket from '../lib/socket';
 import { playTurnChime } from '../lib/soundAlert';
 import LanguageToggle from '../components/ui/LanguageToggle';
+import SalonLogo from '../components/ui/SalonLogo';
 import { fadeInUp, springSnappy, springSmooth } from '../lib/motion';
 
 export const DisplayTvPage = () => {
@@ -152,16 +153,17 @@ export const DisplayTvPage = () => {
       <header className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/10">
         {/* Left: Brand Identity & LIVE Indicator */}
         <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center text-obsidian-950 shadow-glow-gold">
-            <Scissors className="w-6 h-6 transform -rotate-45" />
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-gold-300 via-gold-500 to-amber-600 p-1 flex items-center justify-center text-obsidian-950 shadow-glow-gold border border-gold-300/40">
+            <SalonLogo className="w-8 h-8 text-obsidian-950 drop-shadow-sm" />
           </div>
           <div>
             <div className="flex items-center space-x-3">
-              <span className="font-serif text-2xl sm:text-3xl font-bold tracking-wide text-white">
-                Studio Kashi Salon
+              <span className="font-sans font-extrabold text-2xl sm:text-3xl tracking-tight text-white">
+                Studio Kashi <span className="text-gold-400 font-semibold">Salon</span>
               </span>
-              <span className="hidden sm:inline font-serif text-xl text-gold-400/80 italic">
-                · {isGujarati ? 'લાઇવ ડિસ્પ્લે' : 'Lounge Display'}
+              <span className="hidden sm:inline-block w-[2px] h-5 bg-gold-500/40 rounded-full" />
+              <span className="hidden sm:inline font-gujarati font-bold text-sm sm:text-base text-gold-300 bg-gold-500/10 border border-gold-500/25 px-2.5 py-0.5 rounded-lg shadow-sm">
+                સ્ટુડિયો કાશી સલૂન
               </span>
             </div>
             <div className="flex items-center space-x-2 mt-0.5">

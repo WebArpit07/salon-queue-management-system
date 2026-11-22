@@ -16,6 +16,7 @@ import {
 import { useLanguage } from '../../context/LanguageContext';
 import { useQueue } from '../../context/QueueContext';
 import LanguageToggle from '../ui/LanguageToggle';
+import SalonLogo from '../ui/SalonLogo';
 
 /**
  * Airy, high-whitespace luxury application shell with ambient top navigation
@@ -54,21 +55,33 @@ export const AppShell = ({ children }) => {
       <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Brand Identity */}
-          <Link to="/" className="flex items-center space-x-3 group min-h-[44px]">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center shadow-glow-gold transition-transform duration-300 group-hover:scale-105">
-              <Scissors className="w-5 h-5 text-obsidian-950 transform -rotate-45" />
+          <Link to="/" className="flex items-center space-x-3.5 group min-h-[44px] shrink-0">
+            {/* Bespoke Barber Face Silhouette Logo Badge */}
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-gold-300 via-gold-500 to-amber-600 p-1 flex items-center justify-center shadow-glow-gold transition-transform duration-300 group-hover:scale-105 shrink-0 border border-gold-300/40">
+              <SalonLogo className="w-7 h-7 sm:w-8 sm:h-8 text-obsidian-950 drop-shadow-sm" />
             </div>
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="font-serif text-xl sm:text-2xl font-bold tracking-wide text-white group-hover:text-gold-300 transition-colors">
-                  {isGujarati ? 'સ્ટુડિયો કાશી સલૂન' : 'Studio Kashi Salon'}
+
+            {/* Typography Lockup: Modern Luxury English + Refined Gujarati */}
+            <div className="flex flex-col justify-center whitespace-nowrap">
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                {/* English Name with Distinctive Luxury Weighting */}
+                <span className="font-sans font-extrabold text-base sm:text-lg tracking-tight text-white group-hover:text-gold-200 transition-colors whitespace-nowrap">
+                  Studio Kashi <span className="text-gold-400 font-semibold">Salon</span>
                 </span>
-                <span className="hidden xl:inline text-xs text-gold-400/80 font-serif italic">
-                  · {isGujarati ? 'Studio Kashi Salon' : 'સ્ટુડિયો કાશી સલૂન'}
+
+                {/* Vertical Accent Divider */}
+                <span className="hidden sm:inline-block w-[1.5px] h-3.5 bg-gold-500/40 rounded-full" />
+
+                {/* Gujarati Name with Native Font & Elegant Glass Pill */}
+                <span className="hidden sm:inline-block font-gujarati font-bold text-xs sm:text-[13px] tracking-normal text-gold-300 bg-gold-500/10 border border-gold-500/25 px-2 py-0.5 rounded-md shadow-sm whitespace-nowrap">
+                  સ્ટુડિયો કાશી સલૂન
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 hidden sm:block -mt-1 font-light">
-                {t('brand.tagline')}
+
+              {/* Tagline / Subtitle */}
+              <p className="text-[11px] text-slate-400 hidden lg:flex items-center gap-1.5 font-light leading-tight mt-0.5 whitespace-nowrap">
+                <span className="w-1 h-1 rounded-full bg-gold-400/80 inline-block" />
+                <span>{t('brand.tagline')}</span>
               </p>
             </div>
           </Link>

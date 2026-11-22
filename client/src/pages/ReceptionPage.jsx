@@ -22,6 +22,7 @@ import api from '../lib/api';
 import StaffPinGate from '../components/auth/StaffPinGate';
 import AddWalkInModal from '../components/reception/AddWalkInModal';
 import LanguageToggle from '../components/ui/LanguageToggle';
+import SalonLogo from '../components/ui/SalonLogo';
 import { fadeInUp, springSnappy } from '../lib/motion';
 
 export const ReceptionDashboardContent = () => {
@@ -128,13 +129,18 @@ export const ReceptionDashboardContent = () => {
       <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-2xl bg-white border border-slate-200 text-slate-800 shadow-sm select-none">
         {/* Left: Brand + Quick Links */}
         <div className="flex items-center space-x-3 sm:space-x-4">
-          <div className="w-10 h-10 rounded-xl bg-slate-900 text-gold-400 flex items-center justify-center shadow-sm">
-            <Scissors className="w-5 h-5 transform -rotate-45" />
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 p-1 flex items-center justify-center text-obsidian-950 shadow-sm shrink-0">
+            <SalonLogo className="w-7 h-7 text-obsidian-950" />
           </div>
           <div>
-            <h1 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">
-              {isGujarati ? 'સ્ટુડિયો કાશી સલૂન' : 'Studio Kashi Salon'}
-            </h1>
+            <div className="flex items-center gap-2">
+              <span className="font-sans font-extrabold text-base sm:text-lg text-slate-900 leading-tight">
+                Studio Kashi <span className="text-gold-600 font-semibold">Salon</span>
+              </span>
+              <span className="font-gujarati font-bold text-xs text-gold-700 bg-gold-50 border border-gold-200 px-1.5 py-0.5 rounded">
+                સ્ટુડિયો કાશી સલૂન
+              </span>
+            </div>
             <span className="text-xs text-slate-500 font-medium">
               {isGujarati ? 'સ્વાગત અને ફ્લોર સંચાલન' : 'Concierge & Reception Command'}
             </span>
